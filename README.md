@@ -1,6 +1,6 @@
 # Jambot
 
-🤖 AI-powered music creation with classic synths 🎛️
+🤖 Command-line AI groovebox with an old skool attitude 🎛️
 
 ## Install
 
