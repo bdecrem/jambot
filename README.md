@@ -23,9 +23,7 @@ Talk to it naturally:
 - "add some acid bass"
 - "make the kick punchier"
 - "add swing"
-
-Uses TR-909 drums, TB-303 bass, and SH-101 lead synth emulations.
-Outputs WAV files to ~/Documents/Jambot/projects/
+- Your projects live in `~/Documents/Jambot/` — drag WAVs straight into your DAW
 
 ## Commands
 
