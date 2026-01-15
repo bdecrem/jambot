@@ -6,13 +6,12 @@ AI-powered music creation with classic synths
 
 1. [Download Jambot](https://github.com/bdecrem/jambot/archive/refs/heads/main.zip) and unzip
 2. Open Terminal, `cd` into the folder
-3. Run: `npm install`
+3. Run: `npm install` (need Node.js? [get it here](https://nodejs.org/))
 4. Run: `node jambot.js`
 5. On first run, enter your Anthropic API key when prompted
 
 ## Requirements
 
-- Node.js 18+
 - Anthropic API key (get one at console.anthropic.com)
 
 ## What it does
