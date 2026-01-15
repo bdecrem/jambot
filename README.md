@@ -2,11 +2,11 @@
 
 🤖 Command-line AI groovebox with an old skool attitude 🎛️
 
-Jambot is Claude Code for music production. Talk naturally—"give me a four-on-the-floor kick with offbeat hats"—and it programs real synth engines: TR-909 drums, TB-303 acid bass, SH-101 leads, plus a sample-based drum machine. No black-box AI slop. Every parameter is tweakable, every pattern is yours. Built for producers who want a jam partner, not a replacement.
+Jambot is Claude Code for grooves. Talk naturally—"give me a four-on-the-floor kick with offbeat hats"—and it programs real synth engines: TR-909 drums, TB-303 acid bass, SH-101 leads, plus a sample-based drum machine. No black-box AI slop. Every parameter is tweakable, every pattern is yours. Built for producers who want a jam partner, not a replacement.
 
 ## Install
 
-1. [Download Jambot](https://github.com/bdecrem/jambot/archive/refs/heads/main.zip) and unzip
+1. [Download Jambot](https://github.com/bdecrem/jambot/archive/refs/heads/main.zip), move it to your preferred location, and unzip
 2. Open Terminal, `cd` into the folder
 3. Run: `npm install` (need Node.js? [get it here](https://nodejs.org/))
 4. Run: `node jambot.js`
