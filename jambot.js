@@ -7473,15 +7473,12 @@ function App() {
   const [project, setProject] = useState(null);
   const [projectsList, setProjectsList] = useState([]);
   const firstPromptRef = useRef(null);
-  useEffect(() => {
-    ensureDirectories();
-  }, []);
-  if (needsSetup) {
-    return /* @__PURE__ */ React.createElement(SetupWizard, { onComplete: () => setNeedsSetup(false) });
-  }
   const terminalHeight = stdout?.rows || 24;
   const reservedLines = 4;
   const maxMessageHeight = Math.max(5, terminalHeight - reservedLines);
+  useEffect(() => {
+    ensureDirectories();
+  }, []);
   useEffect(() => {
     if (input.startsWith("/") && input.length > 1 && !showMenu && !showProjectList) {
       const parts = input.split(" ");
@@ -7806,6 +7803,9 @@ Tweaks: ${tweaks.map((v) => `${v}(${Object.keys(session.voiceParams[v]).join(","
     setInput(name);
     setSuggestions([]);
   }, []);
+  if (needsSetup) {
+    return /* @__PURE__ */ React.createElement(SetupWizard, { onComplete: () => setNeedsSetup(false) });
+  }
   return /* @__PURE__ */ React.createElement(Box, { flexDirection: "column", height: terminalHeight }, /* @__PURE__ */ React.createElement(Box, { flexDirection: "column", flexGrow: 1 }, showSplash ? /* @__PURE__ */ React.createElement(Splash, null) : showProjectList ? /* @__PURE__ */ React.createElement(
     ProjectList,
     {
