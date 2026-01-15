@@ -1,6 +1,6 @@
 # Jambot
 
-AI-powered music creation with classic synths
+🤖 AI-powered music creation with classic synths 🎛️
 
 ## Install
 
