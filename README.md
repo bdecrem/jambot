@@ -1,6 +1,6 @@
 # Jambot
 
-🤖 Your AI just learned to funk 🎛️
+AI groovebox — or at least, it's trying to be.
 
 Jambot is Claude Code for grooves, a command-line AI groovebox with an old skool attitude. Talk naturally—"give me a four-on-the-floor kick with offbeat hats"—and it programs real synth engines: TR-909 drums, TB-303 acid bass, SH-101 leads, plus a sample-based drum machine. No black-box AI slop. Every parameter is tweakable, every pattern is yours. Built for producers who want a jam partner, not a replacement.
 
