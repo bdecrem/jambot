@@ -1,39 +1,64 @@
 # Jambot
 
-🤖 Your AI just learned to funk 🎛️
+AI groovebox — or at least, it's trying to be.
 
-Jambot is Claude Code for grooves, a command-line AI groovebox with an old skool attitude. Talk naturally—"give me a four-on-the-floor kick with offbeat hats"—and it programs real synth engines: TR-909 drums, TB-303 acid bass, SH-101 leads, plus a sample-based drum machine. No black-box AI slop. Every parameter is tweakable, every pattern is yours. Built for producers who want a jam partner, not a replacement.
+Talk to an agent that controls a modular synth rack — drum machines, bass synths, effects, a sequencer. Think hardware groovebox meets Claude Code. (In theory.)
+
+**Projects save to:** `~/Documents/Jambot/projects/`
 
 ## Install
 
-1. [Download Jambot](https://github.com/bdecrem/jambot/archive/refs/heads/main.zip), move it to your preferred location, and unzip
-2. Open Terminal, `cd` into the folder
-3. Run: `npm install` (need Node.js? [get it here](https://nodejs.org/))
-4. Run: `node jambot.js`
-5. On first run, enter your Anthropic API key when prompted
+```bash
+git clone https://github.com/bdecrem/jambot.git
+cd jambot
+npm install
+node jambot.js
+```
 
-## Requirements
+On first run, enter your Anthropic API key when prompted (get one at [console.anthropic.com](https://console.anthropic.com)).
 
-- Anthropic API key (get one at console.anthropic.com)
+**Requirements:** Node.js 18+
 
-## What it does
+## The Loop
 
-Talk to it naturally:
-- "make me a techno beat at 128"
-- "add some acid bass"
-- "make the kick punchier"
-- "add swing"
-- Your projects live in `~/Documents/Jambot/` — drag WAVs straight into your DAW
+```
+> make me a techno beat
+[agent programs drums]
+> the hats are too loud
+[agent tweaks]
+> bounce
+[renders WAV to ~/Documents/Jambot/projects/]
+> analyze that
+[agent gives mixing feedback]
+```
+
+## What Works
+
+- **JB01** drum machine — 8 voices, actually works
+- **JB202** bass synth — custom DSP, cross-platform consistent
+- **JP9000** modular — works-ish
+- **Delay effect** — delays things, as advertised
+- **Song mode** — patterns and arrangements
+- **Analyze tools** — spectral analysis for mixing feedback
+
+## What Exists
+
+- **JT10, JT30, JT90** — tribute synths (101, 303, 909 style)
+- **Reverb**
+- **Web UIs** at kochi.to/jb01, kochi.to/jb202, etc.
+
+## What's Probably Broken
+
+Sampler, EQ, sidechain, automation lanes, and many untested features.
 
 ## Commands
 
-Type `/` for menu, or:
-- `/r9d9` - Drum machine guide
-- `/r3d3` - Acid bass guide
-- `/r1d1` - Lead synth guide
-- `/export` - Export MIDI + README
-- `/status` - Current session
-- `/clear` - Reset
+Type `/help` for the full list, or:
+- `/jb01` — Drum machine guide
+- `/jb202` — Bass synth guide
+- `/jt30` — Acid bass guide
+- `/analyze` — Analysis tools guide
+- `/mix` — Show current mix
 
 ## Troubleshooting
 
@@ -41,11 +66,10 @@ Type `/` for menu, or:
 - Key stored in: `~/.jambot/.env`
 - To reset: `rm ~/.jambot/.env` and restart
 
-**Build errors on npm install:**
+**Build errors:**
 - Ensure Node.js 18+ is installed
 - On Mac: May need Xcode Command Line Tools
-- On Linux: May need build-essential
 
 ## Version
 
-v0.1.0 — Jan 28, 2025
+v0.1.0 — It makes noise. Sometimes music.
