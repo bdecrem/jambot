@@ -1,6 +1,6 @@
 # Jambot
 
-AI groovebox — or at least, it's trying to be.
+🤖 Your AI just learned to funk 🎛️
 
 Jambot is Claude Code for grooves, a command-line AI groovebox with an old skool attitude. Talk naturally—"give me a four-on-the-floor kick with offbeat hats"—and it programs real synth engines: TR-909 drums, TB-303 acid bass, SH-101 leads, plus a sample-based drum machine. No black-box AI slop. Every parameter is tweakable, every pattern is yours. Built for producers who want a jam partner, not a replacement.
 
@@ -28,9 +28,11 @@ Talk to it naturally:
 ## Commands
 
 Type `/` for menu, or:
-- `/r9d9` - Drum machine guide
-- `/r3d3` - Acid bass guide
-- `/r1d1` - Lead synth guide
+- `/jb01` - JB01 drum machine guide
+- `/jb202` - JB202 bass synth guide
+- `/jt90` - JT90 (909-style) drums guide
+- `/jt30` - JT30 (303-style) acid bass guide
+- `/jt10` - JT10 (101-style) lead synth guide
 - `/export` - Export MIDI + README
 - `/status` - Current session
 - `/clear` - Reset

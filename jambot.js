@@ -585,10 +585,7 @@ __export(converters_exports, {
   JT10_PARAMS: () => JT10_PARAMS,
   JT30_PARAMS: () => JT30_PARAMS,
   JT90_PARAMS: () => JT90_PARAMS,
-  R1D1_PARAMS: () => R1D1_PARAMS,
-  R3D3_PARAMS: () => R3D3_PARAMS,
-  R9D9_PARAMS: () => R9D9_PARAMS,
-  R9DS_PARAMS: () => R9DS_PARAMS,
+  SAMPLER_PARAMS: () => SAMPLER_PARAMS,
   applyRelative: () => applyRelative,
   convertTweaks: () => convertTweaks,
   describeParams: () => describeParams,
@@ -604,7 +601,7 @@ import { dirname, join } from "path";
 function getParamDef(synth, voice, param) {
   const synthParams = SYNTH_PARAMS[synth.toLowerCase()];
   if (!synthParams) return null;
-  const voiceKey = synth.toLowerCase() === "r9ds" ? "slot" : voice;
+  const voiceKey = synth.toLowerCase() === "sampler" ? "slot" : voice;
   const voiceParams = synthParams[voiceKey];
   if (!voiceParams) return null;
   return voiceParams[param] || null;
@@ -714,7 +711,7 @@ function convertTweaks(synth, voice, tweaks) {
 function describeParams(synth, voice) {
   const synthParams = SYNTH_PARAMS[synth.toLowerCase()];
   if (!synthParams) return "";
-  const voiceKey = synth.toLowerCase() === "r9ds" ? "slot" : voice;
+  const voiceKey = synth.toLowerCase() === "sampler" ? "slot" : voice;
   const voiceParams = synthParams[voiceKey];
   if (!voiceParams) return "";
   const parts = [];
@@ -751,7 +748,7 @@ function validate2(value, paramDef) {
   }
   return { valid: true };
 }
-var __filename, __dirname, loadParams, R9D9_PARAMS, R3D3_PARAMS, R1D1_PARAMS, R9DS_PARAMS, JB200_PARAMS, JB202_PARAMS, JB01_PARAMS, JT30_PARAMS, JT10_PARAMS, JT90_PARAMS, SYNTH_PARAMS;
+var __filename, __dirname, loadParams, JB200_PARAMS, JB202_PARAMS, JB01_PARAMS, JT30_PARAMS, JT10_PARAMS, JT90_PARAMS, SAMPLER_PARAMS, SYNTH_PARAMS;
 var init_converters = __esm({
   "params/converters.js"() {
     __filename = fileURLToPath(import.meta.url);
@@ -760,27 +757,21 @@ var init_converters = __esm({
       const path = join(__dirname, filename);
       return JSON.parse(readFileSync(path, "utf-8"));
     };
-    R9D9_PARAMS = loadParams("r9d9-params.json");
-    R3D3_PARAMS = loadParams("r3d3-params.json");
-    R1D1_PARAMS = loadParams("r1d1-params.json");
-    R9DS_PARAMS = loadParams("r9ds-params.json");
     JB200_PARAMS = loadParams("jb200-params.json");
     JB202_PARAMS = loadParams("jb202-params.json");
     JB01_PARAMS = loadParams("jb01-params.json");
     JT30_PARAMS = loadParams("jt30-params.json");
     JT10_PARAMS = loadParams("jt10-params.json");
     JT90_PARAMS = loadParams("jt90-params.json");
+    SAMPLER_PARAMS = loadParams("sampler-params.json");
     SYNTH_PARAMS = {
-      r9d9: R9D9_PARAMS,
-      r3d3: R3D3_PARAMS,
-      r1d1: R1D1_PARAMS,
-      r9ds: R9DS_PARAMS,
       jb200: JB200_PARAMS,
       jb202: JB202_PARAMS,
       jb01: JB01_PARAMS,
       jt30: JT30_PARAMS,
       jt10: JT10_PARAMS,
-      jt90: JT90_PARAMS
+      jt90: JT90_PARAMS,
+      sampler: SAMPLER_PARAMS
     };
   }
 });
@@ -913,7 +904,7 @@ var init_sampler_node = __esm({
        */
       _registerParams() {
         this.registerParam("level", { min: -60, max: 6, default: -6, unit: "dB", hint: "node output level" });
-        const slotDef = R9DS_PARAMS.slot;
+        const slotDef = SAMPLER_PARAMS.slot;
         if (!slotDef) return;
         for (const slot of SLOTS) {
           for (const [paramName, paramDef] of Object.entries(slotDef)) {
@@ -989,7 +980,7 @@ var init_sampler_node = __esm({
        */
       getSlotEngineParams(slot) {
         const result = {};
-        const slotDef = R9DS_PARAMS.slot;
+        const slotDef = SAMPLER_PARAMS.slot;
         for (const [paramName, paramDef] of Object.entries(slotDef)) {
           const path = `${slot}.${paramName}`;
           const value = this._params[path];
@@ -1168,7 +1159,7 @@ var init_sampler_node = __esm({
           }
         }
         const sparseParams = {};
-        const slotDef = R9DS_PARAMS.slot;
+        const slotDef = SAMPLER_PARAMS.slot;
         for (const [path, value] of Object.entries(this._params)) {
           const [slot, paramName] = path.split(".");
           const paramDef = slotDef?.[paramName];
@@ -10636,20 +10627,20 @@ function generateFullMidi(session, outputPath) {
     ...trackNameEvent("JB200 Bass"),
     ...melodicPatternToMidi(session.jb200Pattern || [], 0, bars, ppq)
   ];
-  const r9d9Pattern = session._nodes?.r9d9?.getPattern?.() || {};
-  const r9d9Track = [
-    ...trackNameEvent("R9D9 Drums"),
-    ...drumPatternToMidi(r9d9Pattern, bars, ppq)
+  const jt90Pattern = session._nodes?.jt90?.getPattern?.() || {};
+  const jt90Track = [
+    ...trackNameEvent("JT90 Drums"),
+    ...drumPatternToMidi(jt90Pattern, bars, ppq)
   ];
-  const r3d3Pattern = session._nodes?.r3d3?.getPattern?.() || [];
-  const r3d3Track = [
-    ...trackNameEvent("R3D3 Bass"),
-    ...melodicPatternToMidi(r3d3Pattern, 1, bars, ppq)
+  const jt30Pattern = session._nodes?.jt30?.getPattern?.() || [];
+  const jt30Track = [
+    ...trackNameEvent("JT30 Bass"),
+    ...melodicPatternToMidi(jt30Pattern, 1, bars, ppq)
   ];
-  const r1d1Pattern = session._nodes?.r1d1?.getPattern?.() || [];
-  const r1d1Track = [
-    ...trackNameEvent("R1D1 Lead"),
-    ...melodicPatternToMidi(r1d1Pattern, 2, bars, ppq)
+  const jt10Pattern = session._nodes?.jt10?.getPattern?.() || [];
+  const jt10Track = [
+    ...trackNameEvent("JT10 Lead"),
+    ...melodicPatternToMidi(jt10Pattern, 2, bars, ppq)
   ];
   const midiData = [
     ...generateHeader(1, 6, ppq),
@@ -10657,9 +10648,9 @@ function generateFullMidi(session, outputPath) {
     ...generateTrack(tempoTrack),
     ...generateTrack(jb01Track),
     ...generateTrack(jb200Track),
-    ...generateTrack(r9d9Track),
-    ...generateTrack(r3d3Track),
-    ...generateTrack(r1d1Track)
+    ...generateTrack(jt90Track),
+    ...generateTrack(jt30Track),
+    ...generateTrack(jt10Track)
   ];
   writeFileSync(outputPath, Buffer.from(midiData));
   return outputPath;
@@ -10671,28 +10662,21 @@ function hasContent(session) {
   );
   const jb200Pattern = session.jb200Pattern || [];
   const hasJB200 = Array.isArray(jb200Pattern) && jb200Pattern.some((s) => s?.gate);
-  const r9d9Pattern = session._nodes?.r9d9?.getPattern?.() || {};
-  const hasR9D9 = Object.values(r9d9Pattern).some(
+  const jt90Pattern = session._nodes?.jt90?.getPattern?.() || {};
+  const hasJT90 = Object.values(jt90Pattern).some(
     (voice) => Array.isArray(voice) && voice.some((step) => step?.velocity > 0)
   );
-  const r3d3Pattern = session._nodes?.r3d3?.getPattern?.() || [];
-  const hasR3D3 = Array.isArray(r3d3Pattern) && r3d3Pattern.some((s) => s?.gate);
-  const r1d1Pattern = session._nodes?.r1d1?.getPattern?.() || [];
-  const hasR1D1 = Array.isArray(r1d1Pattern) && r1d1Pattern.some((s) => s?.gate);
-  const hasDrums = hasJB01;
-  const hasBass = hasJB200;
-  const hasLead = hasR1D1;
+  const jt30Pattern = session._nodes?.jt30?.getPattern?.() || [];
+  const hasJT30 = Array.isArray(jt30Pattern) && jt30Pattern.some((s) => s?.gate);
+  const jt10Pattern = session._nodes?.jt10?.getPattern?.() || [];
+  const hasJT10 = Array.isArray(jt10Pattern) && jt10Pattern.some((s) => s?.gate);
   return {
     hasJB01,
     hasJB200,
-    hasR9D9,
-    hasR3D3,
-    hasR1D1,
-    hasDrums,
-    hasBass,
-    hasLead,
-    // Legacy
-    any: hasJB01 || hasJB200 || hasR9D9 || hasR3D3 || hasR1D1
+    hasJT90,
+    hasJT30,
+    hasJT10,
+    any: hasJB01 || hasJB200 || hasJT90 || hasJT30 || hasJT10
   };
 }
 var HEADER_CHUNK, TRACK_CHUNK, NOTE_ON, NOTE_OFF, END_OF_TRACK, GM_DRUM_MAP;
@@ -11372,113 +11356,12 @@ function showJB200(session) {
   lines.push("PATTERN: " + formatMonoPattern(pattern));
   return lines.join("\n");
 }
-function showBass(session) {
-  const node = session._nodes.bass;
-  const params = node._params;
-  const pattern = session.bassPattern;
-  const defs = R3D3_PARAMS.bass;
-  const lines = ["R3D3 ACID BASS", ""];
-  lines.push("SYNTH: " + [
-    params.waveform || "saw",
-    `cutoff ${formatParam(params.cutoff, defs.cutoff)}`,
-    `res ${formatParam(params.resonance, defs.resonance)}`
-  ].join(", "));
-  lines.push("ENV: " + [
-    `mod ${formatParam(params.envMod, defs.envMod)}`,
-    `decay ${formatParam(params.decay, defs.decay)}`,
-    `accent ${formatParam(params.accent, defs.accent)}`
-  ].join(", "));
-  lines.push("LEVEL: " + formatParam(params.level, defs.level));
-  lines.push("");
-  lines.push("PATTERN: " + formatMonoPattern(pattern));
-  return lines.join("\n");
-}
-function showLead(session) {
-  const node = session._nodes.lead;
-  const params = node._params;
-  const pattern = session.leadPattern;
-  const arp = session.leadArp;
-  const defs = R1D1_PARAMS.lead;
-  const lines = ["R1D1 LEAD SYNTH", ""];
-  lines.push("VCO: " + [
-    `saw ${formatParam(params.vcoSaw, defs.vcoSaw)}`,
-    `pulse ${formatParam(params.vcoPulse, defs.vcoPulse)}`,
-    `pw ${formatParam(params.pulseWidth, defs.pulseWidth)}`
-  ].join(", "));
-  if (params.subLevel > 0) {
-    lines.push("SUB: " + [
-      `level ${formatParam(params.subLevel, defs.subLevel)}`,
-      `mode ${params.subMode}`
-    ].join(", "));
-  }
-  lines.push("FILTER: " + [
-    formatParam(params.cutoff, defs.cutoff),
-    `res ${formatParam(params.resonance, defs.resonance)}`,
-    `env ${formatParam(params.envMod, defs.envMod)}`
-  ].join(", "));
-  lines.push("AMP ENV: " + [
-    `A${formatParam(params.attack, defs.attack)}`,
-    `D${formatParam(params.decay, defs.decay)}`,
-    `S${formatParam(params.sustain, defs.sustain)}`,
-    `R${formatParam(params.release, defs.release)}`
-  ].join(" "));
-  if (params.lfoToPitch > 0 || params.lfoToFilter > 0 || params.lfoToPW > 0) {
-    lines.push("LFO: " + [
-      params.lfoWaveform,
-      `rate ${formatParam(params.lfoRate, defs.lfoRate)}`,
-      params.lfoToPitch > 0 ? `\u2192pitch ${params.lfoToPitch}` : null,
-      params.lfoToFilter > 0 ? `\u2192filter ${params.lfoToFilter}` : null,
-      params.lfoToPW > 0 ? `\u2192pw ${params.lfoToPW}` : null
-    ].filter(Boolean).join(", "));
-  }
-  lines.push("LEVEL: " + formatParam(params.level, defs.level));
-  if (arp && arp.mode !== "off") {
-    lines.push("");
-    lines.push("ARP: " + [
-      arp.mode,
-      `${arp.octaves} oct`,
-      arp.hold ? "hold" : null
-    ].filter(Boolean).join(", "));
-  }
-  lines.push("");
-  lines.push("PATTERN: " + formatMonoPattern(pattern));
-  return lines.join("\n");
-}
-function showDrums(session) {
-  const pattern = session.drumPattern;
-  const params = session.drumParams;
-  const kit = session.drumKit;
-  const lines = ["R9D9 DRUM MACHINE", ""];
-  lines.push(`Kit: ${kit || "default"}`);
-  lines.push(`Length: ${session.drumPatternLength || 16}, Scale: ${session.drumScale || "16th"}`);
-  if (session.drumFlam > 0) lines.push(`Flam: ${Math.round(session.drumFlam * 100)}%`);
-  lines.push("");
-  const voices = ["kick", "snare", "clap", "ch", "oh", "ltom", "mtom", "htom", "rimshot", "crash", "ride"];
-  for (const voice of voices) {
-    const steps = pattern[voice] || [];
-    const hits = steps.filter((s) => s?.velocity > 0);
-    if (hits.length > 0) {
-      const hitSteps = steps.map((s, i) => s?.velocity > 0 ? i + 1 : null).filter(Boolean);
-      const voiceParams = params[voice] || {};
-      let info = `${voice.toUpperCase()}: ${hitSteps.join(", ")}`;
-      if (voiceParams.level !== void 0 && voiceParams.level !== 0) {
-        const lvl = voiceParams.level;
-        info += ` @ ${lvl >= 0 ? "+" : ""}${lvl}dB`;
-      }
-      lines.push(info);
-    }
-  }
-  if (lines.length === 5) {
-    lines.push("(no pattern)");
-  }
-  return lines.join("\n");
-}
 function showSampler(session) {
   const kit = session.samplerKit;
   if (!kit) {
-    return "R9DS SAMPLER\n\nNo kit loaded. Use load_kit to load one.";
+    return "SAMPLER\n\nNo kit loaded. Use load_kit to load one.";
   }
-  const lines = ["R9DS SAMPLER", ""];
+  const lines = ["SAMPLER", ""];
   lines.push(`Kit: ${kit.name} (${kit.id})`);
   lines.push("");
   lines.push("SLOTS:");
@@ -11657,23 +11540,15 @@ var init_session_tools = __esm({
         const { instrument } = input;
         const showFns = {
           jb200: showJB200,
-          bass: showBass,
-          r3d3: showBass,
+          jb202: showJB200,
           // alias
-          lead: showLead,
-          r1d1: showLead,
-          // alias
-          drums: showDrums,
-          r9d9: showDrums,
-          // alias
-          sampler: showSampler,
-          r9ds: showSampler,
-          // alias
-          jb01: showJB01
+          jb01: showJB01,
+          sampler: showSampler
+          // TODO: Add show functions for jt10, jt30, jt90
         };
         const showFn = showFns[instrument?.toLowerCase()];
         if (!showFn) {
-          const available = Object.keys(showFns).filter((k) => !["r3d3", "r1d1", "r9d9", "r9ds"].includes(k));
+          const available = Object.keys(showFns);
           return `Unknown instrument: ${instrument}. Available: ${available.join(", ")}`;
         }
         return showFn(session);
@@ -11779,7 +11654,7 @@ Slots: ${slotNames}`;
           const slotMeta = session.samplerKit.slots.find((s) => s.id === slotId);
           return slotMeta ? `${slotMeta.short}:${a.split(":")[1]}` : a;
         });
-        return `R9DS samples: ${slotInfo.join(", ")}`;
+        return `Sampler samples: ${slotInfo.join(", ")}`;
       },
       /**
        * DEPRECATED: Use generic tweak() instead.
@@ -11802,16 +11677,16 @@ Slots: ${slotNames}`;
         }
         const tweaks = [];
         if (input.mute === true) {
-          const def = getParamDef("r9ds", slot, "level");
+          const def = getParamDef("sampler", slot, "level");
           session.samplerParams[slot].level = def ? toEngine(-60, def) : 0;
           tweaks.push("muted");
         } else if (input.mute === false) {
-          const def = getParamDef("r9ds", slot, "level");
+          const def = getParamDef("sampler", slot, "level");
           session.samplerParams[slot].level = def ? toEngine(0, def) : 0.5;
           tweaks.push("unmuted");
         }
         if (input.level !== void 0) {
-          const def = getParamDef("r9ds", slot, "level");
+          const def = getParamDef("sampler", slot, "level");
           session.samplerParams[slot].level = def ? toEngine(input.level, def) : input.level;
           tweaks.push(`level=${input.level}dB`);
         }
@@ -11820,30 +11695,30 @@ Slots: ${slotNames}`;
           tweaks.push(`tune=${input.tune > 0 ? "+" : ""}${input.tune}st`);
         }
         if (input.attack !== void 0) {
-          const def = getParamDef("r9ds", slot, "attack");
+          const def = getParamDef("sampler", slot, "attack");
           session.samplerParams[slot].attack = def ? toEngine(input.attack, def) : input.attack / 100;
           tweaks.push(`attack=${input.attack}`);
         }
         if (input.decay !== void 0) {
-          const def = getParamDef("r9ds", slot, "decay");
+          const def = getParamDef("sampler", slot, "decay");
           session.samplerParams[slot].decay = def ? toEngine(input.decay, def) : input.decay / 100;
           tweaks.push(`decay=${input.decay}`);
         }
         if (input.filter !== void 0) {
-          const def = getParamDef("r9ds", slot, "filter");
+          const def = getParamDef("sampler", slot, "filter");
           session.samplerParams[slot].filter = def ? toEngine(input.filter, def) : input.filter;
           const display = input.filter >= 1e3 ? `${(input.filter / 1e3).toFixed(1)}kHz` : `${input.filter}Hz`;
           tweaks.push(`filter=${display}`);
         }
         if (input.pan !== void 0) {
-          const def = getParamDef("r9ds", slot, "pan");
+          const def = getParamDef("sampler", slot, "pan");
           session.samplerParams[slot].pan = def ? toEngine(input.pan, def) : input.pan / 100;
           const panDisplay = input.pan === 0 ? "C" : input.pan < 0 ? `L${Math.abs(input.pan)}` : `R${input.pan}`;
           tweaks.push(`pan=${panDisplay}`);
         }
         const slotMeta = session.samplerKit?.slots.find((s) => s.id === slot);
         const slotName = slotMeta ? slotMeta.name : slot;
-        return `R9DS ${slotName}: ${tweaks.join(", ")}`;
+        return `Sampler ${slotName}: ${tweaks.join(", ")}`;
       },
       /**
        * Show current sampler state (loaded kit, slots, pattern)
@@ -11851,9 +11726,9 @@ Slots: ${slotNames}`;
       show_sampler: async (input, session, context) => {
         const kit = session.samplerKit;
         if (!kit) {
-          return "R9DS: No kit loaded. Use load_kit to load one.";
+          return "Sampler: No kit loaded. Use load_kit to load one.";
         }
-        const lines = ["R9DS SAMPLER:", ""];
+        const lines = ["Sampler SAMPLER:", ""];
         lines.push(`Kit: ${kit.name} (${kit.id})`);
         lines.push("");
         lines.push("Slots:");
@@ -13794,7 +13669,10 @@ var init_generic_tools = __esm({
       // Real instruments
       jb01: "jb01",
       jb202: "jb202",
-      sampler: "r9ds",
+      jt10: "jt10",
+      jt30: "jt30",
+      jt90: "jt90",
+      sampler: "sampler",
       jp9000: "jp9000",
       // Aliases
       drums: "jb01",
@@ -16535,7 +16413,7 @@ async function renderSession(session, bars, filename) {
   masterGain.connect(context.destination);
   const outputBuffer = await context.startRendering();
   const instrumentBuffers = [];
-  const canonicalIds = ["jb01", "jb200", "jb202", "jp9000", "sampler", "r9d9", "r3d3", "r1d1"];
+  const canonicalIds = ["jb01", "jb200", "jb202", "jp9000", "sampler", "jt10", "jt30", "jt90"];
   for (const id of canonicalIds) {
     const node = session._nodes[id];
     if (!node) continue;
@@ -17303,7 +17181,7 @@ var TOOLS = [
       required: ["name"]
     }
   },
-  // R9DS Sampler tools
+  // Sampler tools
   {
     name: "list_kits",
     description: "List all available sample kits (bundled + user kits from ~/Documents/Jambot/kits/)",
@@ -17315,7 +17193,7 @@ var TOOLS = [
   },
   {
     name: "load_kit",
-    description: "Load a sample kit for R9DS. Use list_kits first to see available kits.",
+    description: "Load a sample kit for the Sampler. Use list_kits first to see available kits.",
     input_schema: {
       type: "object",
       properties: {
@@ -17326,7 +17204,7 @@ var TOOLS = [
   },
   {
     name: "add_samples",
-    description: "Add sample patterns to R9DS. Must load_kit first. Slots are s1-s10. For simple patterns use step arrays [0,4,8,12]. For velocity control use [{step:0,vel:1},{step:4,vel:0.5}].",
+    description: "Add sample patterns to the Sampler. Must load_kit first. Slots are s1-s10. For simple patterns use step arrays [0,4,8,12]. For velocity control use [{step:0,vel:1},{step:4,vel:0.5}].",
     input_schema: {
       type: "object",
       properties: {
@@ -17346,7 +17224,7 @@ var TOOLS = [
   },
   {
     name: "tweak_samples",
-    description: "Tweak R9DS sample parameters. UNITS: level in dB, tune in semitones, attack/decay 0-100, filter in Hz, pan L/R -100 to +100. Use mute:true to silence.",
+    description: "Tweak Sampler parameters. UNITS: level in dB, tune in semitones, attack/decay 0-100, filter in Hz, pan L/R -100 to +100. Use mute:true to silence.",
     input_schema: {
       type: "object",
       properties: {

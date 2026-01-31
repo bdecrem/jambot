@@ -25,30 +25,22 @@ const loadParams = (filename) => {
   return JSON.parse(readFileSync(path, 'utf-8'));
 };
 
-export const R9D9_PARAMS = loadParams('r9d9-params.json');
-export const R3D3_PARAMS = loadParams('r3d3-params.json');
-export const R1D1_PARAMS = loadParams('r1d1-params.json');
-export const R9DS_PARAMS = loadParams('r9ds-params.json');
 export const JB200_PARAMS = loadParams('jb200-params.json');
 export const JB202_PARAMS = loadParams('jb202-params.json');
 export const JB01_PARAMS = loadParams('jb01-params.json');
-
-// JT Series (modular DSP instruments)
 export const JT30_PARAMS = loadParams('jt30-params.json');
 export const JT10_PARAMS = loadParams('jt10-params.json');
 export const JT90_PARAMS = loadParams('jt90-params.json');
+export const SAMPLER_PARAMS = loadParams('sampler-params.json');
 
 const SYNTH_PARAMS = {
-  r9d9: R9D9_PARAMS,
-  r3d3: R3D3_PARAMS,
-  r1d1: R1D1_PARAMS,
-  r9ds: R9DS_PARAMS,
   jb200: JB200_PARAMS,
   jb202: JB202_PARAMS,
   jb01: JB01_PARAMS,
   jt30: JT30_PARAMS,
   jt10: JT10_PARAMS,
   jt90: JT90_PARAMS,
+  sampler: SAMPLER_PARAMS,
 };
 
 /**
@@ -58,8 +50,8 @@ export function getParamDef(synth, voice, param) {
   const synthParams = SYNTH_PARAMS[synth.toLowerCase()];
   if (!synthParams) return null;
 
-  // R9DS uses generic "slot" definition for all slots (s1-s10)
-  const voiceKey = synth.toLowerCase() === 'r9ds' ? 'slot' : voice;
+  // Sampler uses generic "slot" definition for all slots (s1-s10)
+  const voiceKey = synth.toLowerCase() === 'sampler' ? 'slot' : voice;
   const voiceParams = synthParams[voiceKey];
   if (!voiceParams) return null;
 
@@ -227,7 +219,7 @@ export function formatValue(value, paramDef) {
 /**
  * Convert a full tweak object from producer units to engine units
  *
- * @param {string} synth - 'r9d9', 'r3d3', 'r1d1', 'r9ds'
+ * @param {string} synth - 'jb01', 'jb202', 'jt10', 'jt30', 'jt90', 'sampler'
  * @param {string} voice - Voice name (e.g., 'kick', 'bass', 'lead', 's1')
  * @param {object} tweaks - Object of param:value pairs in producer units
  * @returns {object} - Object of param:value pairs in engine units
@@ -267,7 +259,7 @@ export function describeParams(synth, voice) {
   const synthParams = SYNTH_PARAMS[synth.toLowerCase()];
   if (!synthParams) return '';
 
-  const voiceKey = synth.toLowerCase() === 'r9ds' ? 'slot' : voice;
+  const voiceKey = synth.toLowerCase() === 'sampler' ? 'slot' : voice;
   const voiceParams = synthParams[voiceKey];
   if (!voiceParams) return '';
 
